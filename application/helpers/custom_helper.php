@@ -6,7 +6,7 @@
     return '3.1';
   }
   function required_php_version(){
-    return 7.4;
+    return '8.0';
   }
 
   function string_to_number($number=0)
