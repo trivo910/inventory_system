@@ -40,10 +40,6 @@ define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'producti
 
 
 
-if(!file_exists(".htaccess")){
-	fopen(".htaccess", "w");
-	copy("uploads/htaccess_file/.htaccess", ".htaccess");
-}
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
