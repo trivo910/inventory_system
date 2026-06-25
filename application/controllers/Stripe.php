@@ -4,7 +4,7 @@
 
 class Stripe extends CI_Controller {
 
-     
+    private string $stripe_api_key;
 
     /**
 
@@ -23,6 +23,9 @@ class Stripe extends CI_Controller {
        $this->load->library("session");
 
        $this->load->helper('url');
+
+       $this->load->config('stripe');
+       $this->stripe_api_key = config_item('stripe_api_key');
 
     }
 
@@ -66,11 +69,9 @@ class Stripe extends CI_Controller {
 
      
 
-      $stripeSecret = 'STRIPE_SECRET_KEY';
+      // $stripeSecret = 'STRIPE_SECRET_KEY';
 
- 
-
-      \Stripe\Stripe::setApiKey($stripeSecret);
+      \Stripe\Stripe::setApiKey($this->stripe_api_key);
 
       
 
