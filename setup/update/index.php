@@ -41,16 +41,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
         if($database->check_database_exist_or_not($_POST) == false)
         {
             $message = $core->show_message('error',"Failed ! Database `".$_POST['database']."` Does Not Exist! Please Create Manually in Your server!");
-        } 
+        }
 
 		else if($database->create_database($_POST) == false)
 		{
 			$message = $core->show_message('error',"The database could not be created, make sure your the host, username, password, database name is correct.");
-		} 
-		else if ($database->create_tables($_POST) == false)
-		{
-			$message = $core->show_message('error',"Invalid Purchase Code!!");
-		} 
+		}
 		else if ($core->checkFile() == false)
 		{
 			$message = $core->show_message('error',"File application/config/database.php is Empty");
@@ -124,9 +120,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
                 }?>
                 
                 <form id="install_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                	<div class="form-group">
-                    <label for="hostname" class="text-warning">Make Sure Internet Connected!</label>
-                </div>
                 <div class="form-group">
                     <label for="hostname">Database Hostname<span class='text-danger'>*</span></label>
                     <input type="text" id="hostname" value="localhost" placeholder="Database Hostname (Usualy localhost)" class="form-control" name="hostname" />
@@ -163,34 +156,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
                     <input type="hidden" id="url" class="form-control" name="url" placeholder="http://example.com/" value="<?=$url;?>" />
                     <!-- <p class="help-block text-danger" style="display: none;" id="username_msg"></p> 
                 </div> -->
-                <div class="form-group">
-                    <label for="envato_username">Envato Username</label>
-                    <input type="envato_username" id="envato_username" placeholder="Envato/Codecanyon Username" class="form-control" name="envato_username" />
-                   <p class="help-block text-danger"  style="display: none;" id="envato_username_msg"></p> 
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email Id<span class='text-danger'>*</span></label>
-                    <input type="email" id="email" placeholder="Email ID" class="form-control" name="email" />
-                   <p class="help-block text-danger"  style="display: none;" id="email_msg"></p> 
-                </div>
-
-                <div class="form-group">
-                    <label for="purchase_code">Purchase Code<span class='text-danger'>*</span></label><br>
-                    
-                    <span class="text-warning">
-                        <p>To find This Item Purchase Code Please Check Your Email or go to Codecanyon -> Downloads Tab.</p>
-                    </span>
-
-                    <div class="alert alert-warning">
-                        <p>NOTE: <br>
-                           Regular License Users can use One Time Purchase Code for installation! as well as applicable for update process for single Machine!!.
-                        </p>
-                    </div>
-                    
-                    <input type="text" id="purchase_code" class="form-control" name="purchase_code" value='' />
-                    <p class="help-block text-danger" style="display: none;" id="purchase_code_msg"></p> 
-                </div>
                 <input type="button" value="Update" class="btn btn-primary btn-block" id="send" />
 
                 </form>
@@ -218,18 +183,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <script type="text/javascript">
-        /*Email validation code*/
-        function validateEmail(sEmail) {
-            var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,9}|[0-9]{1,3})(\]?)$/;
-            if (filter.test(sEmail)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
           $("#send").click(function(event) {
-            
+
               event.preventDefault();
               var flag=true;
 
@@ -256,22 +211,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
                 check_field("username");
                 check_field("database");
                 check_field("url");
-                check_field("purchase_code");
-                //check_field("envato_username");
-
-                check_field("email");
 
                 if(flag==false){
                     return false;
-                }
-
-                var email=$("#email").val().trim();
-                if (email=='' || !validateEmail(email)) {
-                    $("#email_msg").html("Invalid Email!").show();
-                    return;
-                }
-                else{
-                    $("#email_msg").hide();
                 }
 
                 $("#send").val("Please wait...").attr('disabled',true);

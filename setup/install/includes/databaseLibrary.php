@@ -29,28 +29,28 @@ class Database {
 		return true;
 	}
 
+	function is_database_empty($data){
+		$hostname = $data['hostname'];
+		$username = $data['username'];
+		$password = $data['password'];
+		$database_name = $data['database'];
+
+		$conn = new mysqli($hostname, $username, $password, $database_name);
+		if ($conn->connect_error) {
+			return false;
+		}
+
+		$q = $conn->query("SELECT COUNT(*) AS c FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '".$conn->real_escape_string($database_name)."'");
+		$row = $q->fetch_assoc();
+		$conn->close();
+
+		return ((int)$row['c'] === 0);
+	}
+
 	function create_tables($data){
-		$purchase_code = $data['purchase_code'];
-		$envato_username = $data['envato_username'];
-		$email = $data['email'];
-		$response='';
-
-		$headers = array(
-		    'http' => array(
-		        'header'  => 'Connection: close\r\n',
-		        'method'  => 'GET',
-		        'content' => '',
-		        /*'timeout' => 15*/
-		    ),
-		);
-
-		$context = stream_context_create($headers);
-		
-		$system_name = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-		$actual_link = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 		$response = file_get_contents('db.txt',true);
 		if(true){
-			
+
 			$con1=mysqli_connect($data['hostname'],$data['username'],$data['password'],$data['database']);
 
 			$q1=mysqli_multi_query($con1,$response);

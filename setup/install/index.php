@@ -52,12 +52,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
 		else if($database->create_database($_POST) == false)
 		{
 			$message = $core->show_message('error',"The database could not be created, make sure your the host, username, password, database name is correct.");
-		} 
+		}
+
+		else if ($database->is_database_empty($_POST) == false)
+		{
+			$message = $core->show_message('error',"Database `".$_POST['database']."` already has tables in it! This installer only works on a completely empty database — running it here would risk your existing data. Please create a new, empty database and use that instead.");
+		}
 
 		else if ($database->create_tables($_POST) == false)
 		{
-			$message = $core->show_message('error',"Invalid Purchase Code!!");
-		} 
+			$message = $core->show_message('error',"Failed to import the database schema. Check that the database is empty and the DB user has CREATE privileges.");
+		}
         
 		else if ($core->checkFile() == false)
 		{
@@ -74,6 +79,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
             echo "<center>Please Wait...</center>";
             echo "<center>Installation in Process..</center>";
             //echo $urlWb;
+            $urlWb = $urlWb."updates/update_db";
             ?>
             <center>
                 <div class="loader"></div>    
@@ -141,11 +147,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
                     </div>
 
                 <form id="install_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                	<div class="form-group">
-                    <label for="hostname" class="text-warning">Make Sure Internet Connected!</label>
-
-                    
-                </div>
                 <div class="form-group">
                     <label for="hostname">Database Hostname<span class='text-danger'>*</span></label>
                     <input type="text" id="hostname" value="localhost" placeholder="Database Hostname (Usualy localhost)" class="form-control" name="hostname" />
@@ -183,24 +184,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
                     <!-- <p class="help-block text-danger" style="display: none;" id="username_msg"></p> 
                 </div> -->
                 
-                <div class="form-group">
-                    <label for="envato_username">Envato Username</label>
-                    <input type="envato_username" id="envato_username" placeholder="Envato/Codecanyon Username" class="form-control" name="envato_username" />
-                   <p class="help-block text-danger"  style="display: none;" id="envato_username_msg"></p> 
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Id<span class='text-danger'>*</span></label>
-                    <input type="email" id="email" placeholder="Email ID" class="form-control" name="email" />
-                   <p class="help-block text-danger"  style="display: none;" id="email_msg"></p> 
-                </div>
-
-                <div class="form-group">
-                    <label for="purchase_code">Purchase Code<span class='text-danger'>*</span></label><br>
-
-                    <input type="text" id="purchase_code" placeholder="random value" class="form-control" name="purchase_code" value='' />
-                    <p class="help-block text-danger" style="display: none;" id="purchase_code_msg"></p> 
-                </div>
                 <input type="button" value="Install" class="btn btn-primary btn-block" id="send" />
                 </form>
         
@@ -227,19 +210,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <script type="text/javascript">
-        /*Email validation code*/
-        function validateEmail(sEmail) {
-            var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,9}|[0-9]{1,3})(\]?)$/;
-            if (filter.test(sEmail)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
           $("#send").click(function(event) {
-            
+
               event.preventDefault();
               var flag=true;
 
@@ -266,24 +238,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST) {
                 check_field("username");
                 check_field("database");
                 check_field("url");
-                check_field("purchase_code");
-                //check_field("envato_username");
-                check_field("email");
 
                 if(flag==false){
                     return false;
                 }
 
-                var email=$("#email").val().trim();
-                if (email=='' || !validateEmail(email)) {
-                    $("#email_msg").html("Invalid Email!").show();
-                    return;
-                }
-                else{
-                    $("#email_msg").hide();
-                }
-
-                
                 $("#send").val("Please wait...").attr('disabled',true);
                 $("#install_form").submit();
                 return;
