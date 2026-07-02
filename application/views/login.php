@@ -37,7 +37,7 @@
 
   <div class="login-logo">
     <a href="#"><b>
-      <img src="<?php echo base_url(get_site_logo());?>" width=180>
+      <img src="<?php echo base_url(get_site_logo());?>" width="180" >
     </b></a>
   </div>
   <!-- /.login-logo -->
