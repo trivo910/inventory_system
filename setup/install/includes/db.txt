@@ -4436,7 +4436,7 @@ ALTER TABLE `ac_transactions`
 -- Constraints for table `db_bankdetails`
 --
 ALTER TABLE `db_bankdetails`
-  ADD CONSTRAINT `db_bankdetails_ibfk_1` FOREIGN KEY (`store_id`) REFERENCES `db_store` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `db_bankdetails_ibfk_1` FOREIGN KEY (`store_id`) REFERENCES `db_store` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `db_brands`

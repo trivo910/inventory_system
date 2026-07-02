@@ -2,7 +2,7 @@
 class Core {
 	function checkEmpty($data)
 	{
-	    if(!empty($data['hostname']) && !empty($data['username']) && !empty($data['database']) && !empty($data['url']) && !empty($data['purchase_code'])){
+	    if(!empty($data['hostname']) && !empty($data['username']) && !empty($data['database']) && !empty($data['url'])){
 	        return true;
 	    }else{
 	        return false;

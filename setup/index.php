@@ -30,12 +30,12 @@
 		 }
 
 		 $phpversion = phpversion();
-		 if($phpversion>7.4){
-		 	echo '<div class="alert alert-danger alert-dismissible">
-                <i class="fa fa-times-circle"></i> Application required PHP Version 7.4 or 7.3, Your server loaded with PHP Version '.$phpversion.' 
-              </div>';
-              $flag=false;
-		 }
+		//  if($phpversion>7.4){
+		//  	echo '<div class="alert alert-danger alert-dismissible">
+        //         <i class="fa fa-times-circle"></i> Application required PHP Version 7.4 or 7.3, Your server loaded with PHP Version '.$phpversion.' 
+        //       </div>';
+        //       $flag=false;
+		//  }
 
 		 
 
@@ -66,9 +66,11 @@
     <button class="btn btn-success btn-block my-4" <?=(!$flag) ? 'Disabled' : '';?> type="button">Install</button>
    </a>
    &nbsp;
+   <?php if(false){ ?> 
    <a href="update">
     <button class="btn btn-info btn-block my-4" <?=(!$flag) ? 'Disabled' : '';?> type="button">Update</button>
    </a>
+   <?php } ?>
 
    
 </form>

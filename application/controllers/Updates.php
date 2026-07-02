@@ -249,7 +249,7 @@ class Updates extends MY_Controller {
 			$q1 = $this->db->query("ALTER TABLE `db_sales` CHANGE `count_id` `count_id` INT(20) NULL COMMENT 'Use to create Sales Code'");if(!$q1){ echo "failed"; exit();}
 			$q1 = $this->db->query("ALTER TABLE `db_store` ADD COLUMN `invoice_terms` TEXT NULL");if(!$q1){ echo "failed"; exit();}
 			$q1 = $this->db->query("ALTER TABLE `db_sales` ADD COLUMN `invoice_terms` TEXT NULL");if(!$q1){ echo "failed"; exit();}
-			$q1 = $this->db->query("CREATE TABLE `db_bankdetails`( `id` INT(5) NOT NULL AUTO_INCREMENT, `store_id` INT(5), `country_id` INT(5), `holder_name` VARCHAR(250), `bank_name` VARCHAR(250), `branch_name` VARCHAR(250), `code` VARCHAR(250) COMMENT 'IFSC or Bank Code', `account_type` VARCHAR(250), `account_number` VARCHAR(250), `other_details` TEXT, `description` TEXT, `status` INT(5), PRIMARY KEY (`id`), FOREIGN KEY (`store_id`) REFERENCES `db_store`(`id`) ON UPDATE CASCADE ); ");if(!$q1){ echo "failed"; exit();}
+			$q1 = $this->db->query("CREATE TABLE `db_bankdetails`( `id` INT(5) NOT NULL AUTO_INCREMENT, `store_id` INT(5), `country_id` INT(5), `holder_name` VARCHAR(250), `bank_name` VARCHAR(250), `branch_name` VARCHAR(250), `code` VARCHAR(250) COMMENT 'IFSC or Bank Code', `account_type` VARCHAR(250), `account_number` VARCHAR(250), `other_details` TEXT, `description` TEXT, `status` INT(5), PRIMARY KEY (`id`), FOREIGN KEY (`store_id`) REFERENCES `db_store`(`id`) ON DELETE CASCADE ON UPDATE CASCADE ); ");if(!$q1){ echo "failed"; exit();}
 			$q1 = $this->db->query("INSERT INTO `db_bankdetails` (`id`, `store_id`, `status`) VALUES ('1', '1', '1')");if(!$q1){ echo "failed"; exit();}
 
 
