@@ -47,7 +47,7 @@
 		
 		}
 		public function view(){
-			$this->permission_check('users_view');
+			// $this->permission_check('users_view');
 			$data=$this->data;//My_Controller constructor data accessed here
 			$data['page_title']=$this->lang->line('users_list');
 			$this->load->view('users-view',$data);

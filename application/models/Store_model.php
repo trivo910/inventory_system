@@ -606,15 +606,40 @@ Thank you Visit Again",
         }
 	}
 	public function delete_store_from_table($ids){
+			$store_ids = array_unique(array_filter(array_map('intval', explode(',', $ids)), function($id){
+				return $id > 1; // store id 1 (SAAS ADMIN) can never be deleted
+			}));
+
+			if (empty($store_ids)){
+				echo "failed";
+				return;
+			}
+
 			$this->db->trans_begin();
-			$query1=$this->db->where_in('id',$ids)->where('id!=1')->delete('db_store');
-	        if ($query1){
+
+			$store_ids_csv = implode(',', $store_ids);
+
+			// db_cobpayments, db_sobpayments and db_stockentry have no foreign key
+			// back to db_store, so they must be cleaned up via their parent's
+			// store_id before that parent (db_customers/db_suppliers/db_items)
+			// disappears through the cascading delete below.
+			$this->db->query("DELETE FROM db_cobpayments WHERE customer_id IN (SELECT id FROM db_customers WHERE store_id IN ($store_ids_csv))");
+			$this->db->query("DELETE FROM db_sobpayments WHERE supplier_id IN (SELECT id FROM db_suppliers WHERE store_id IN ($store_ids_csv))");
+			$this->db->query("DELETE FROM db_stockentry WHERE item_id IN (SELECT id FROM db_items WHERE store_id IN ($store_ids_csv))");
+
+			// Every other tenant table has ON DELETE CASCADE back to db_store,
+			// so removing the store rows cascades through sales, items,
+			// customers, tax, roles, etc. automatically.
+			$query1 = $this->db->where_in('id', $store_ids)->delete('db_store');
+
+	        if ($query1 && $this->db->trans_status()){
 	        	$this->db->trans_commit();
 	            echo "success";
 	        }
 	        else{
+	        	$this->db->trans_rollback();
 	            echo "failed";
-	        }	
+	        }
 	}
 	public function create_default_warehouse($store_id,$mobile='',$email=''){
 		$created_date = date("Y-m-d");

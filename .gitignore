@@ -4,4 +4,6 @@ application/config/stripe.php
 
 application/logs
 
-application/uploads/site/logo.png
+uploads/site/logo.png
+
+uploads/users
