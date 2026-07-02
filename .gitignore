@@ -2,6 +2,8 @@ application/config/database.php
 
 application/config/stripe.php
 
-.htaccess
-
 application/logs
+
+uploads/site/logo.png
+
+uploads/users

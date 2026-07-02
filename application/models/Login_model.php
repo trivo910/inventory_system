@@ -126,49 +126,43 @@ Thank you
 	}
 	public function verify_otp($otp)
 	{
-		//Filtering XSS and html escape from user inputs 
-		$otp=$this->security->xss_clean(html_escape($otp));
-		$email=$this->security->xss_clean(html_escape($email));
-		if($this->session->userdata('email')==$email){ redirect(base_url().'logout','refresh');	}
-				
-		$query=$this->db->query("select * from db_users where username='$username' and password='".md5($password)."' and status=1");
-		if($query->num_rows()==1){
+		$otp  = $this->security->xss_clean(html_escape($otp));
+		$email = $this->session->userdata('email');
 
+		if(empty($email)){ return false; }
+
+		$query = $this->db->select('*')
+		                   ->from('db_users')
+		                   ->where('email', $email)
+		                   ->where('status', 1)
+		                   ->get();
+
+		if($query->num_rows()==1){
 			$logdata = array(
-							'inv_username'  => $query->row()->username,
-							'user_lname'  => $query->row()->last_name,
-				        	 'inv_userid'  => $query->row()->id,
-				        	 'logged_in' => TRUE,
-				        	 'role_id' => $query->row()->role_id,
-				        	 'role_name' => trim($query->row()->role_name),
-				        	 'store_id' => trim($query->row()->store_id),
-				        	);
+				'inv_username' => $query->row()->username,
+				'user_lname'   => $query->row()->last_name,
+				'inv_userid'   => $query->row()->id,
+				'logged_in'    => TRUE,
+				'role_id'      => $query->row()->role_id,
+				'role_name'    => trim($query->row()->role_name),
+				'store_id'     => trim($query->row()->store_id),
+			);
 			$this->session->set_userdata($logdata);
 			return true;
 		}
-		else{
-			return false;
-		}		
+		return false;
 	}
 	public function change_password($password,$email){
-			$query=$this->db->query("select * from db_users where email='$email' and status=1");
+			$query = $this->db->select('id')
+			                   ->from('db_users')
+			                   ->where('email', $email)
+			                   ->where('status', 1)
+			                   ->get();
 			if($query->num_rows()==1){
-				/*if($query->row()->username == 'admin'){
-					echo "Restricted Admin Password Change";exit();
-				}*/
-				$password=md5($password);
-				$query1="update db_users set password='$password' where email='$email'";
-				if ($this->db->simple_query($query1)){
-
-				        return true;
-				}
-				else{
-				        return false;
-				}
+				$this->db->where('email', $email)
+				         ->update('db_users', ['password' => md5($password)]);
+				return $this->db->affected_rows() > 0;
 			}
-			else{
-				return false;
-				}
-
+			return false;
 		}
 }
